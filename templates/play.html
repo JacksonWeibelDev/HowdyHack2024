@@ -3,29 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="stylesheets/main.css">
     <title>Hangman Game</title>
 </head>
 <body>
-    <h1>Hangman</h1>
-    <p>Word to guess: {{ masked_word }}</p>
-    <p>Attempts left: {{ attempts_left }}</p>
+    <div class="game-container">
+        <h1>Hangman</h1>
+        <div class="game-info">
+            <p><strong>Word to guess:</strong> {{ masked_word }}</p>
+            <p><strong>Attempts left:</strong> {{ attempts_left }}</p>
+        </div>
+        
+        <div class="guess-info">
+            <p><strong>Correct guesses:</strong> {{ correct_guessed_letters }}</p>
+            <p><strong>Incorrect guesses:</strong> {{ incorrect_guessed_letters }}</p>
+        </div>
 
-    <p>Correct guesses: {{ correct_guessed_letters }}</p>
-    <p>Incorrect guesses: {{ incorrect_guessed_letters }}</p>
-
-    {% if not game_over %}
-        <form method="POST">
-            <label for="guess">Guess a letter:</label>
-            <input type="text" id="guess" name="guess" maxlength="1" required>
-            <button type="submit">Submit Guess</button>
-        </form>
-    {% else %}
-        {% if victory %}
-            <p>Congratulations! You guessed the word: {{ word }}!</p>
+        {% if not game_over %}
+            <form method="POST" class="guess-form">
+                <label for="guess">Guess a letter:</label>
+                <input type="text" id="guess" name="guess" maxlength="1" required>
+                <button type="submit">Submit Guess</button>
+            </form>
         {% else %}
-            <p>Game Over! The word was: {{ word }}</p>
+            {% if victory %}
+                <p class="victory-message">Congratulations! You guessed the word: {{ word }}!</p>
+            {% else %}
+                <p class="game-over-message">Game Over! The word was: {{ word }}</p>
+            {% endif %}
+            <a href="{{ url_for('reset') }}" class="play-again-btn">Play Again</a>
         {% endif %}
-        <a href="{{ url_for('reset') }}">Play Again</a>
-    {% endif %}
+    </div>
 </body>
 </html>
