@@ -3,25 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>All Users</title>
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='stylesheets/main.css') }}">
+    <title>Discovery</title>
 </head>
 <body>
-    <h1>All Users</h1>
+    <h1>Discovery</h1>
     <ul>
         {% for user, info in users.items() %}
             <li>
-                {{ user }}
-                {% if user in likes %} ✔️ {% endif %} <!-- Check mark if liked -->
-                <form method="POST" style="display:inline;">
-                    <input type="hidden" name="liked_user" value="{{ user }}">
-                    <button type="submit">Like</button>
-                </form>
+                <a href="{{ url_for('view_profile', username=user) }}">{{ user }}</a>
+                {% if user in likes %} ✔️
+                    <form method="POST" style="display:inline;">
+                        <input type="hidden" name="liked_user" value="{{ user }}">
+                        <button type="submit">Unlike</button>
+                    </form>
+                {% else %}
+                    <form method="POST" style="display:inline;">
+                        <input type="hidden" name="liked_user" value="{{ user }}">
+                        <button type="submit">Like</button>
+                    </form>
+                {% endif %}
             </li>
         {% endfor %}
     </ul>
 
-    <a href="{{ url_for('matches') }}">View Matches</a>
     <a href="{{ url_for('my_profile') }}">My Profile</a>
+    | <a href="{{ url_for('matches') }}">Your Matches</a>
 
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}

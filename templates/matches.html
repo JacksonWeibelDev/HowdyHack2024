@@ -3,27 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='stylesheets/main.css') }}">
     <title>Your Matches</title>
 </head>
 <body>
-    <h1>Your Matches</h1>
-    <ul>
-        {% for match in matches %}
-            <li>{{ match }}</li>
-        {% endfor %}
-    </ul>
+    <div class="container">
+        <h1>Your Matches</h1>
 
-    <a href="{{ url_for('my_profile') }}">My Profile</a>
-    <a href="{{ url_for('all_users', username=current_user) }}">View All Users</a>
+        <ul>
+            {% if matches %}
+                {% for match in matches %}
+                    <li>
+                        <a href="{{ url_for('view_profile', username=match) }}">{{ match }}</a>
+                        - <a href="{{ url_for('messages', username=match) }}">Message</a>
+                    </li>
+                {% endfor %}
+            {% else %}
+                <li>No matches found.</li>
+            {% endif %}
+        </ul>
 
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            <ul>
-            {% for category, message in messages %}
-                <li class="{{ category }}">{{ message }}</li>
-            {% endfor %}
-            </ul>
-        {% endif %}
-    {% endwith %}
+        <a href="{{ url_for('my_profile') }}">Back to Profile</a>
+    </div>
 </body>
 </html>

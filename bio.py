@@ -15,6 +15,18 @@ if os.path.exists(USER_BIOS_FILE):
 else:
     user_bios = {}
 
+messages_file = 'user_messages.json'
+
+def load_messages():
+    if os.path.exists(messages_file):
+        with open(messages_file, 'r') as f:
+            return json.load(f)
+    return {}
+
+def save_messages(messages):
+    with open(messages_file, 'w') as f:
+        json.dump(messages, f)
+
 # Initialize matches dictionary
 if 'matches' not in user_bios:
     user_bios['matches'] = {}
@@ -106,6 +118,14 @@ def my_profile():
         flash('You need to log in first!', 'danger')
         return redirect(url_for('login'))
 
+@app.route('/profile/<username>', methods=['GET'])
+def view_profile(username):
+    user_info = user_bios.get(username, {})
+    matches = user_bios.get('matches', {}).get(username, [])
+
+    return render_template('profile_view.html', user_info=user_info, matches=matches)
+
+
 @app.route('/all_users', methods=['GET', 'POST'])
 def all_users():
     username = session.get('username')  # Get the current user's username from the session
@@ -124,23 +144,33 @@ def all_users():
             liked_user = request.form['liked_user']
             if liked_user in user_bios:
                 # Check if the current user has already liked the liked_user
-                if liked_user not in user_bios[username].get('likes', []):
-                    # Add like only if it is not already liked
+                if liked_user in user_bios[username].get('likes', []):
+                    # If already liked, unlike the user
+                    user_bios[username]['likes'].remove(liked_user)
+
+                    # Also remove from matches if they were matched
+                    if liked_user in user_bios['matches'].get(username, []):
+                        user_bios['matches'][username].remove(liked_user)
+                        user_bios['matches'][liked_user].remove(username)
+
+                    flash(f"You have unliked {liked_user}.")
+                else:
+                    # Add the like if not already liked
                     user_bios[username].setdefault('likes', []).append(liked_user)
 
-                    # Check for matches only if the liked user also likes back
+                    # Check if the liked user also likes back to match them
                     if username in user_bios[liked_user].get('likes', []):
                         user_bios['matches'].setdefault(username, []).append(liked_user)
                         user_bios['matches'].setdefault(liked_user, []).append(username)
 
-                    save_bios_to_file()  # Save updated bios
-                else:
-                    flash(f"You've already liked {liked_user}.")
+                    flash(f"You have liked {liked_user}.")
 
+                save_bios_to_file()  # Save the updated data
     else:
         filtered_users = {}
 
-    return render_template('all_users.html', users=filtered_users, current_user=username, likes=user_bios[username].get('likes', []))
+    return render_template('all_users.html', users=filtered_users, current_user=username,
+                           likes=user_bios[username].get('likes', []))
 
 
 @app.route('/matches')
@@ -165,6 +195,35 @@ def create_user_bio(username, bio, gender, preferred_gender, password):
     }
     save_bios_to_file()
 
+
+@app.route('/messages/<username>', methods=['GET', 'POST'])
+def messages(username):
+    current_username = session.get('username')
+    user_info = user_bios.get(current_username, {})
+
+    # Load existing messages
+    all_messages = load_messages()
+
+    # Sort the usernames alphabetically to create a consistent key
+    user_pair = sorted([current_username, username])
+    key = f"{user_pair[0]}_{user_pair[1]}"
+
+    # Initialize the message list for the current conversation if it doesn't exist
+    if key not in all_messages:
+        all_messages[key] = []
+
+    if request.method == 'POST':
+        # Get the message from the form
+        message = request.form.get('message')
+        # Store the message in the conversation
+        if message:
+            all_messages[key].append({"from": current_username, "message": message})
+            save_messages(all_messages)
+
+    # Retrieve messages for display
+    messages_list = all_messages.get(key, [])
+
+    return render_template('messages.html', username=username, user_info=user_info, messages=messages_list, current_username=current_username)
 
 
 if __name__ == '__main__':
