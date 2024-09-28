@@ -1,127 +1,83 @@
-/* Basic Reset */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-/* Body Styles */
 body {
-    font-family: 'Georgia', serif; /* Vintage feel with serif font */
-    line-height: 1.6;
-    background-color: #f8f1e7; /* Light beige background */
-    color: #3b2e28; /* Dark brown text */
-    padding: 20px;
+    background-color: #f5f0e1;  /* Warm, rustic background */
+    font-family: 'Garamond', serif; /* Elegant old-style font */
+    color: #3b2a1a; /* Dark brown for text */
+    margin: 0;
+    padding: 20px; /* Added padding for spacing */
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Align items to the top */
 }
 
-/* Container */
-.container {
-    max-width: 800px;
-    margin: auto;
-    padding: 20px;
-    background-color: #fff; /* White background for content */
-    border: 1px solid #d1b4a1; /* Soft border */
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+/* Profile Container */
+.profile-container {
+    background-color: #fff4e6;  /* Light beige for a soft, rustic feel */
+    border-radius: 15px;
+    padding: 40px;
+    width: 80%;
+    max-width: 600px;
+    text-align: center;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    border: 3px solid #7c5e2a;  /* Dark brown border for an antique look */
 }
 
-/* Headings */
-h1, h2, h3 {
-    margin-bottom: 15px;
-    color: #8b4513; /* Saddle brown color */
-    font-family: 'Times New Roman', serif; /* Classic western look */
-}
-
+/* Header Styles */
 h1 {
-    font-size: 2.5rem; /* Large title */
-}
-
-h2 {
-    font-size: 2rem; /* Secondary title */
-}
-
-/* Links */
-a {
-    color: #a0522d; /* Sienna color for links */
-    text-decoration: none; /* Remove underline */
-    font-weight: bold; /* Make links stand out */
-}
-
-a:hover {
-    text-decoration: underline; /* Underline on hover */
-    color: #8b4513; /* Darker saddle brown */
-}
-
-/* Lists */
-ul {
-    list-style: none; /* Remove bullet points */
-    padding-left: 0; /* Remove padding */
-}
-
-li {
-    padding: 10px 0; /* Spacing between list items */
-    border-bottom: 1px solid #d1b4a1; /* Light border */
-}
-
-li:last-child {
-    border-bottom: none; /* Remove border for the last item */
-}
-
-/* Buttons */
-button {
-    background-color: #c9a66b; /* Golden color for buttons */
-    color: #fff; /* White text */
-    border: none;
-    border-radius: 4px;
-    padding: 10px 15px;
-    cursor: pointer;
-    font-family: 'Courier New', monospace; /* Monospace font for a rustic feel */
-    transition: background-color 0.3s ease;
-}
-
-button:hover {
-    background-color: #a57d3b; /* Darker gold on hover */
-}
-
-/* Flash Messages */
-.flash {
-    margin: 10px 0;
-    padding: 10px;
-    border-radius: 4px;
-}
-
-.flash.success {
-    background-color: #d4edda; /* Light green for success */
-    color: #155724; /* Dark green text */
-}
-
-.flash.error {
-    background-color: #f8d7da; /* Light red for error */
-    color: #721c24; /* Dark red text */
+    font-size: 2.8em;
+    color: #7c5e2a;  /* Dark brown for vintage contrast */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+    margin-bottom: 30px;
+    font-family: 'Playfair Display', serif; /* Western-style font */
 }
 
 /* Form Styles */
 form {
-    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* Space between form elements */
 }
 
-/* Input Styles */
-input[type="text"], input[type="hidden"], input[type="password"] {
-    width: 100%;
+/* Flash Messages */
+.flash-messages {
+    list-style-type: none;
+    padding: 0;
+    margin-top: 20px;
+}
+
+.flash-messages li {
     padding: 10px;
-    border: 1px solid #c8b9a4; /* Light brown border */
-    border-radius: 4px;
-    margin-top: 5px;
-    font-family: 'Courier New', monospace; /* Rustic feel for input */
+    margin-top: 10px;
+    border-radius: 5px;
+    font-size: 1.1em;
+    text-align: center;
 }
 
-/* Responsive Design */
-@media (max-width: 600px) {
-    .container {
-        padding: 15px; /* Reduce padding on small screens */
-    }
+/* Success and Error Message Styles */
+.flash-message {
+    background-color: #dff0d8;
+    color: #3c763d;
+    border: 1px solid #d6e9c6;
+}
 
-    h1 {
-        font-size: 2rem; /* Adjust heading size for smaller screens */
-    }
+.flash-error {
+    background-color: #f2dede;
+    color: #a94442;
+    border: 1px solid #ebccd1;
+}
+
+/* Button Styles */
+.submit-btn {
+    font-size: 1.1em;
+    color: #ffffff;
+    background-color: #9a7b4e;  /* Golden brown for a rich Western feel */
+    padding: 10px 15px;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: background-color 0.3s;
+    border: none; /* Remove default border */
+    cursor: pointer; /* Change cursor to pointer */
+}
+
+.submit-btn:hover {
+    background-color: #7c5e2a; /* Darker brown on hover */
 }
