@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hangman Game</title>
+</head>
+<body>
+    <h1>Hangman</h1>
+    <p>Word to guess: {{ masked_word }}</p>
+    <p>Attempts left: {{ attempts_left }}</p>
+
+    <p>Correct guesses: {{ correct_guessed_letters }}</p>
+    <p>Incorrect guesses: {{ incorrect_guessed_letters }}</p>
+
+    {% if not game_over %}
+        <form method="POST">
+            <label for="guess">Guess a letter:</label>
+            <input type="text" id="guess" name="guess" maxlength="1" required>
+            <button type="submit">Submit Guess</button>
+        </form>
+    {% else %}
+        {% if victory %}
+            <p>Congratulations! You guessed the word: {{ word }}!</p>
+        {% else %}
+            <p>Game Over! The word was: {{ word }}</p>
+        {% endif %}
+        <a href="{{ url_for('reset') }}">Play Again</a>
+    {% endif %}
+</body>
+</html>

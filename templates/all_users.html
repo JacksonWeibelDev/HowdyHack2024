@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Users</title>
+</head>
+<body>
+    <h1>All Users</h1>
+    <ul>
+        {% for user, info in users.items() %}
+            <li>
+                {{ user }}
+                {% if user in likes %} ✔️ {% endif %} <!-- Check mark if liked -->
+                <form method="POST" style="display:inline;">
+                    <input type="hidden" name="liked_user" value="{{ user }}">
+                    <button type="submit">Like</button>
+                </form>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <a href="{{ url_for('matches') }}">View Matches</a>
+    <a href="{{ url_for('my_profile') }}">My Profile</a>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul>
+            {% for category, message in messages %}
+                <li class="{{ category }}">{{ message }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+</body>
+</html>
