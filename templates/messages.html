@@ -21,7 +21,7 @@
 
     <div class="messages">
         {% for msg in messages %}
-            <div class="message">
+
                 {% if msg.get('game') == 'hangman' %}
                     {% if msg['from'] == current_username %}
                         <p><strong>You</strong> have sent a Hangman game!</p>  <!-- Change for the sender -->
@@ -29,11 +29,18 @@
                         <p><strong>{{ msg['from'] }}</strong> has sent you a Hangman game!</p>
                         <a href="{{ url_for('play_hangman', username=username)}}">Click here to play Hangman</a>
                     {% endif %}
+                {% endif %}
+                {% if msg.get('game') == 'two_truths_and_a_lie' %}
+                    {% if msg['from'] != current_username %}
+                        <p><a href="{{ url_for('play_two_truths_and_a_lie', username=username) }}">You received a "Two Truths and a Lie" game! Click to play.</a></p>
+                    {% else %}
+                        <p>You sent a "Two Truths and a Lie" game.</p>
+                    {% endif %}
                 {% else %}
                     <p><strong>{{ msg['from'] }}</strong>: {{ msg['message'] }}</p>
                 {% endif %}
-            </div>
-        {% endfor %}
+
+        {% endfor%}
     </div>
 
     <form method="POST">
@@ -42,6 +49,12 @@
     </form>
 
     <a href="{{ url_for('hangman', username=username) }}">Send Hangman Game</a>
+    <a href="{{ url_for('two_truths_and_a_lie', username=username) }}">Send Two Truths and a Lie Game</a>
+
+    <form action="{{ url_for('clear_messages', username=username) }}" method="POST">
+    <button type="submit" class="btn btn-danger">Clear Messages</button>
+    </form>
+
 <a href="{{ url_for('my_profile') }}">Back to Profile</a>
 </body>
 </html>

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='stylesheets/main.css') }}">
+    <title>{{ username }}'s Profile</title>
+</head>
+
+<form method="POST">
+    <label for="truth_1">First Truth:</label>
+    <input type="text" name="truth_1" id="truth_1" required>
+
+    <label for="truth_2">Second Truth:</label>
+    <input type="text" name="truth_2" id="truth_2" required>
+
+    <label for="lie">The Lie:</label>
+    <input type="text" name="lie" id="lie" required>
+
+    <button type="submit">Send Game</button>
+
+</form>
+<a href="{{ url_for('my_profile') }}">Back to messages</a>

@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, session, flash
+from flask import Flask, render_template, request, redirect, url_for, session, flash, make_response
 import json
 import os
 import random
@@ -40,7 +40,11 @@ def save_bios_to_file():
 
 @app.route('/')
 def index():
-    return render_template('bio_home.html')
+    username = request.cookies.get('username')
+    if username :
+        return redirect(url_for('profile', username=username))
+    else :
+        return render_template('bio_home.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -49,9 +53,14 @@ def login():
         password = request.form['password']
         # Check if the username exists and the password matches
         if username in user_bios and user_bios[username]['password'] == password:
-            session['username'] = username
-            flash(f'Logged in as {username}', 'success')
-            return redirect(url_for('profile', username=username))
+            # Create a response object to set the cookie
+            response = make_response(redirect(url_for('profile', username=username)))
+
+            # Store the username in a cookie (e.g., valid for 30 minutes)
+            response.set_cookie('username', username, max_age=1800,path='/')
+            print(request.cookies.get('username'))
+            print(request.cookies.get('username'))
+            return response
         else:
             flash('Invalid username or password.', 'danger')
     return render_template('login.html')
@@ -77,7 +86,7 @@ def create_bio():
 
 @app.route('/edit_bio', methods=['GET', 'POST'])
 def edit_bio():
-    username = session.get('username')
+    username = request.cookies.get('username')
     if not username:
         flash('You need to log in first!', 'danger')
         return redirect(url_for('login'))
@@ -112,7 +121,7 @@ def profile(username):
 
 @app.route('/my_profile')
 def my_profile():
-    username = session.get('username')
+    username = request.cookies.get('username')
     if username:
         return profile(username)
     else:
@@ -129,7 +138,7 @@ def view_profile(username):
 
 @app.route('/all_users', methods=['GET', 'POST'])
 def all_users():
-    username = session.get('username')  # Get the current user's username from the session
+    username = request.cookies.get('username')  # Get the current user's username from the session
 
     # Get the preferred gender of the specified user
     user_info = user_bios.get(username, None)
@@ -176,16 +185,18 @@ def all_users():
 
 @app.route('/matches')
 def matches():
-    username = session.get('username')  # Get the current user's username from the session
+    username = request.cookies.get('username')  # Get the current user's username from the session
     matches_list = user_bios.get('matches', {}).get(username, [])
     return render_template('matches.html', matches=matches_list, current_user=username)
 
 
 @app.route('/logout')
 def logout():
-    session.pop('username', None)  # Remove username from the session
+    response = redirect(url_for('login'))  # Redirect to login or home page
+    response.delete_cookie('username') # Remove username from the session
+    response.delete_cookie('username') # Remove username from the session
     flash('You have been logged out.', 'success')
-    return redirect(url_for('login'))
+    return response
 
 def create_user_bio(username, bio, gender, preferred_gender, password):
     user_bios[username] = {
@@ -199,24 +210,29 @@ def create_user_bio(username, bio, gender, preferred_gender, password):
 
 @app.route('/messages/<username>', methods=['GET', 'POST'])
 def messages(username):
-    current_username = session.get('username')
+    current_username = request.cookies.get('username')
     user_info = user_bios.get(current_username, {})
 
     # Load existing messages
     all_messages = load_messages()
 
     # Sort the usernames alphabetically to create a consistent key
-    user_pair = sorted([current_username, username])
-    key = f"{user_pair[0]}_{user_pair[1]}"
-
+    if username is not None:
+        user_pair = sorted([current_username, username])
+        key = f"{user_pair[0]}_{user_pair[1]}"
+    else:
+        return redirect(url_for('login'))
     # Initialize the message list for the current conversation if it doesn't exist
     if key not in all_messages:
         all_messages[key] = []
 
     if request.method == 'POST':
-        # Check if sending a Hangman game
         if 'hangman' in request.form:
-            return redirect(url_for('hangman', username=username))  # This is correct
+            # Redirect to the Hangman game page
+            return redirect(url_for('hangman', username=username))
+        elif 'two_truths_and_a_lie' in request.form:
+            # Redirect to the Two Truths and a Lie game page
+            return redirect(url_for('two_truths_and_a_lie', username=username))
         else:
             # Get the message from the form
             message = request.form.get('message')
@@ -230,6 +246,83 @@ def messages(username):
 
     return render_template('messages.html', username=username, user_info=user_info, messages=messages_list, current_username=current_username)
 
+import random
+
+@app.route('/two_truths_and_a_lie/<username>', methods=['GET', 'POST'])
+def two_truths_and_a_lie(username):
+    current_username = request.cookies.get('username')
+
+    # Load existing messages
+    all_messages = load_messages()
+
+    # Sort the usernames to create a consistent key
+    user_pair = sorted([current_username, username])
+    key = f"{user_pair[0]}_{user_pair[1]}"
+
+    if request.method == 'POST':
+        # Get the two truths and one lie from the form
+        truth1 = request.form.get('truth_1')
+        truth2 = request.form.get('truth_2')
+        lie = request.form.get('lie')
+
+        if truth1 and truth2 and lie:
+            # Create a list of truths and lie
+            options = [truth1, truth2, lie]
+
+            # Shuffle the list to randomize the order
+            random.shuffle(options)
+
+            # Store the shuffled options in the messages list
+            all_messages[key].append({
+                "from": current_username,
+                "game": "two_truths_and_a_lie",
+                "options": options,  # Shuffled truths and lie
+                "lie": lie  # Still store the actual lie for comparison later
+            })
+            save_messages(all_messages)
+
+            # Redirect back to messages page with a confirmation message
+            flash('Two Truths and a Lie game has been sent!', 'success')
+            return redirect(url_for('messages', username=username))
+
+    return render_template('two_truths_and_a_lie.html', current_username=current_username)
+
+@app.route('/play_two_truths_and_a_lie/<username>', methods=['GET', 'POST'])
+def play_two_truths_and_a_lie(username):
+    current_username = request.cookies.get('username')
+
+    # Load existing messages
+    all_messages = load_messages()
+
+    # Sort the usernames to create a consistent key
+    user_pair = sorted([current_username, username])
+    key = f"{user_pair[0]}_{user_pair[1]}"
+
+    # Get the most recent two truths and a lie game
+    last_message = next((msg for msg in all_messages[key] if msg.get('game') == 'two_truths_and_a_lie'), None)
+
+    if not last_message:
+        flash('No Two Truths and a Lie game found.', 'danger')
+        return redirect(url_for('messages', username=username))
+
+    options = last_message['options']  # Shuffled list of options
+    actual_lie = last_message['lie']  # The actual lie
+
+    if request.method == 'POST':
+        guessed_lie = request.form.get('guessed_lie')
+
+        # Check if the guessed lie matches the actual lie
+        if guessed_lie == actual_lie:
+            flash('Correct! You found the lie!', 'success')
+        else:
+            flash('Incorrect! That was a truth.', 'danger')
+
+        # After guessing, redirect to the messages page
+        return redirect(url_for('messages', username=username))
+
+    return render_template('play_two_truths_and_a_lie.html', options=options, current_username=current_username)
+
+
 get_to_know_you_questions = {
     "What's your favorite animal?": "elephant",
     "What's your favorite color?": "blue",
@@ -241,7 +334,7 @@ get_to_know_you_questions = {
 
 @app.route('/hangman/<username>', methods=['GET', 'POST'])
 def hangman(username):
-    current_username = session.get('username')
+    current_username = request.cookies.get('username')
 
     # Load existing messages
     all_messages = load_messages()
@@ -282,7 +375,7 @@ def hangman(username):
 
 @app.route('/play_hangman/<username>', methods=['GET', 'POST'])
 def play_hangman(username):
-    current_username = session.get('username')
+    current_username = request.cookies.get('username')
 
     # Check if the current user is the recipient of the Hangman game
     if current_username == username:
@@ -354,8 +447,24 @@ def play_hangman(username):
 
     return render_template('play_hangman.html', username=username, word_display=word_display, guessed_letters=', '.join(guessed_letters), game_won=game_won)
 
+@app.route('/clear_messages/<username>', methods=['POST'])
+def clear_messages(username):
+    current_username = request.cookies.get('username')
 
+    # Load existing messages
+    all_messages = load_messages()
 
+    # Sort the usernames to create a consistent key
+    user_pair = sorted([current_username, username])
+    key = f"{user_pair[0]}_{user_pair[1]}"
+
+    # Remove all messages for this conversation
+    if key in all_messages:
+        all_messages[key] = []  # Clear the message list for this conversation
+        save_messages(all_messages)
+
+    flash('Messages have been cleared.', 'success')
+    return redirect(url_for('messages', username=username))
 
 if __name__ == '__main__':
     app.run(debug=True)

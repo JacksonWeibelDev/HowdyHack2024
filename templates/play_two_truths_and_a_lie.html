@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='stylesheets/main.css') }}">
+    <title>{{ username }}'s Profile</title>
+</head>
+
+<h2>Two Truths and a Lie</h2>
+<form method="POST">
+    <h2>Two Truths and a Lie</h2>
+    <p>Can you guess which one is the lie?</p>
+
+    {% for option in options %}
+        <div>
+            <input type="radio" name="guessed_lie" value="{{ option }}" required>
+            <label>{{ option }}</label>
+        </div>
+    {% endfor %}
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
