@@ -78,10 +78,18 @@ def create_bio():
             'bio': bio,
             'gender': gender,
             'preferred_gender': preferred_gender,
-            'password': password  # Save password (should use hashing for production)
+            'password': password,  # Save password (should use hashing for production)
+            'likes': []
         }
         save_bios_to_file()  # Save the updated bios to the file
-        return redirect(url_for('profile', username=username))
+        response = make_response(redirect(url_for('profile', username=username)))
+
+        # Store the username in a cookie (e.g., valid for 30 minutes)
+        response.set_cookie('username', username, max_age=1800, path='/')
+        print(request.cookies.get('username'))
+        print(request.cookies.get('username'))
+        return response
+
     return render_template('create_bio.html')
 
 @app.route('/edit_bio', methods=['GET', 'POST'])
@@ -140,6 +148,10 @@ def view_profile(username):
 def all_users():
     username = request.cookies.get('username')  # Get the current user's username from the session
 
+    # Load avatars from avatars.json
+    with open('avatars.json', 'r') as f:
+        avatars = json.load(f)
+
     # Get the preferred gender of the specified user
     user_info = user_bios.get(username, None)
     if user_info:
@@ -147,7 +159,7 @@ def all_users():
         # Filter users based on the preferred gender and exclude the current user
         filtered_users = {
             user: info for user, info in user_bios.items()
-            if 'gender' in info and info['gender'] == preferred_gender and user != username
+            if info.get('gender') == preferred_gender and user != username
         }
 
         if request.method == 'POST':
@@ -179,9 +191,8 @@ def all_users():
     else:
         filtered_users = {}
 
-    return render_template('all_users.html', users=filtered_users, current_user=username,
+    return render_template('all_users.html', users=filtered_users, avatars=avatars, current_user=username,
                            likes=user_bios[username].get('likes', []))
-
 
 @app.route('/matches')
 def matches():
@@ -465,6 +476,78 @@ def clear_messages(username):
 
     flash('Messages have been cleared.', 'success')
     return redirect(url_for('messages', username=username))
+
+
+# File to store avatar customizations
+AVATAR_FILE = 'avatars.json'
+
+
+# Helper function to load avatars from file
+def load_avatars():
+    if os.path.exists(AVATAR_FILE):
+        with open(AVATAR_FILE, 'r') as file:
+            return json.load(file)
+    return {}
+
+
+# Helper function to save avatars to file
+def save_avatar(username, avatar_data):
+    avatars = load_avatars()
+    avatars[username] = avatar_data
+    with open(AVATAR_FILE, 'w') as file:
+        json.dump(avatars, file, indent=4)
+
+
+# Route for avatar customization
+@app.route('/customize-avatar', methods=['GET', 'POST'])
+def customize_avatar():
+    username = request.cookies.get('username')
+
+    if not username:
+        return "You need to be logged in to customize your avatar.", 403
+
+    avatars = load_avatars()
+    avatar_data = avatars.get(username, None)  # Get user's existing avatar if it exists
+
+    if request.method == 'POST':
+        # Get the selected options from the form
+        skin_tone = request.form.get('skin_tone')
+        hair_color = request.form.get('hair_color')
+        hairstyle = request.form.get('hairstyle')
+
+        # Get additional features
+        hat = request.form.get('hat') == 'on'  # Checkbox for hat
+        bandana = request.form.get('bandana') == 'on'  # Checkbox for bandana
+        glasses = request.form.get('glasses') == 'on'  # Checkbox for glasses
+        pipe = request.form.get('pipe') == 'on'  # Checkbox for pipe
+
+        # Create avatar data to store
+        avatar_data = {
+            'skin_tone': skin_tone,
+            'hair_color': hair_color,
+            'hairstyle': hairstyle,
+            'hat': hat,
+            'bandana': bandana,
+            'glasses': glasses,
+            'pipe': pipe
+        }
+
+        # Save avatar to the JSON file
+        save_avatar(username, avatar_data)
+
+        return redirect(url_for('my_profile'))  # Redirect to avatar display page
+
+    # Predefined options for hairstyles and facial features
+    hairstyles = ['hair_one', 'hair_two', 'hair_three', 'hair_four', 'hair_five', 'hair_six']  # Use lowercase for image filenames
+    #facial_features = ['beard', 'moustache', 'freckles', 'glasses']
+
+    # If the user has an existing avatar, load its details; otherwise, set default values
+    return render_template(
+        'customize_avatar.html',
+        hairstyles=hairstyles,
+        avatar_data=avatar_data  # Pass existing avatar data if available
+    )
+
 
 if __name__ == '__main__':
     app.run(debug=True)

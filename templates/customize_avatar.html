@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customize Avatar</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='stylesheets/main.css') }}">
+    <style>
+        .avatar-preview {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            margin: 20px;
+            overflow: hidden; /* Prevents overflow */
+        }
+        .avatar-face {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Ensure the image covers the area */
+            position: absolute; /* Position it absolutely */
+            z-index: 1; /* Place face below other elements */
+        }
+        .avatar-hair {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Ensure the hair image covers the area */
+            z-index: 2; /* Place hair above face */
+        }
+        .accessory {
+            position: absolute;
+            width: 100%;
+            height: auto; /* Adjust height based on width */
+            left: 0;
+            z-index: 3; /* Place accessories above other layers */
+        }
+    </style>
+    <script>
+        function updateHairstyle() {
+            const hairstyle = document.getElementById('hairstyle').value;
+            const hairPreview = document.getElementById('hairPreview');
+            hairPreview.src = "{{ url_for('static', filename='images/hair/') }}" + hairstyle + ".png"; // Update hair image
+        }
+
+        function updateAccessories() {
+            const hat = document.querySelector('input[name="hat"]').checked;
+            const bandana = document.querySelector('input[name="bandana"]').checked;
+            const glasses = document.querySelector('input[name="glasses"]').checked;
+            const pipe = document.querySelector('input[name="pipe"]').checked;
+
+            const hatImg = document.querySelector('img[alt="Hat"]');
+            const bandanaImg = document.querySelector('img[alt="Bandana"]');
+            const glassesImg = document.querySelector('img[alt="Glasses"]');
+            const pipeImg = document.querySelector('img[alt="Pipe"]');
+
+            hatImg.style.display = hat ? 'block' : 'none';
+            bandanaImg.style.display = bandana ? 'block' : 'none';
+            glassesImg.style.display = glasses ? 'block' : 'none';
+            pipeImg.style.display = pipe ? 'block' : 'none';
+        }
+
+        function initializeInputs() {
+            updateAccessories(); // Initialize accessories visibility
+        }
+    </script>
+</head>
+<body onload="initializeInputs()">
+    <h1>Customize Your Avatar</h1>
+    <form method="POST">
+        <label for="hairstyle">Hairstyle:</label>
+        <select id="hairstyle" name="hairstyle" onchange="updateHairstyle()">
+            {% for style in hairstyles %}
+                <option value="{{ style }}" {% if avatar_data and avatar_data.hairstyle == style %}selected{% endif %}>{{ style.capitalize() }}</option>
+            {% endfor %}
+        </select>
+        <br><br>
+
+        <label>
+            <input type="checkbox" name="hat" onchange="updateAccessories()" {% if avatar_data and avatar_data.hat %}checked{% endif %}>
+            Hat
+        </label>
+        <br>
+        <label>
+            <input type="checkbox" name="bandana" onchange="updateAccessories()" {% if avatar_data and avatar_data.bandana %}checked{% endif %}>
+            Bandana
+        </label>
+        <br>
+        <label>
+            <input type="checkbox" name="glasses" onchange="updateAccessories()" {% if avatar_data and avatar_data.glasses %}checked{% endif %}>
+            Glasses
+        </label>
+        <br>
+        <label>
+            <input type="checkbox" name="pipe" onchange="updateAccessories()" {% if avatar_data and avatar_data.pipe %}checked{% endif %}>
+            Pipe
+        </label>
+        <br><br>
+
+        <div class="avatar-preview" id="avatarPreview">
+            <img class="avatar-face" id="facePreview" src="{{ url_for('static', filename='images/face.png') }}" alt="Face">
+            <img class="avatar-hair" id="hairPreview" src="{{ url_for('static', filename='images/hair/' + (avatar_data.hairstyle if avatar_data else 'hair_one') + '.png') }}" alt="Hair">
+            <img class="accessory" src="{{ url_for('static', filename='images/accessories/RideACowboy_Hat.webp') }}" alt="Hat" style="display: none;">
+            <img class="accessory" src="{{ url_for('static', filename='images/accessories/RideACowboy_Bandana.webp') }}" alt="Bandana" style="display: none;">
+            <img class="accessory" src="{{ url_for('static', filename='images/accessories/RideACowboy_Glasses.webp') }}" alt="Glasses" style="display: none;">
+            <img class="accessory" src="{{ url_for('static', filename='images/accessories/RideACowboy_Pipe.webp') }}" alt="Pipe" style="display: none;" style="bottom: 20px; left: 60px;">
+        </div>
+
+        <button type="submit">Save Avatar</button>
+    </form>
+</body>
+</html>
