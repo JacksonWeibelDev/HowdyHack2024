@@ -74,7 +74,7 @@
 
                 // Check if the elements exist before applying any changes
                 if (avatarData && avatarData.hairstyle && hairPreview) {
-                    hairPreview.src = `/static/images/hair/${avatarData.hairstyle}.png`;
+                    hairPreview.src = `/static/assets/images/hair/${avatarData.hairstyle}.png`;
                 } else {
                     console.warn(`Hair preview not found for user: ${username}`);
                 }
@@ -130,26 +130,26 @@
             <li style="position: relative; padding-bottom: 100px; padding-top: 100px">
                 <a href="{{ url_for('view_profile', username=user) }}" class="wanted-poster"
                     style="position:absolute; top:0; left:0;">
-                    <img src="{{ url_for('static', filename='images/wanted_poster.png') }}" alt="Wanted Poster"
+                    <img src="{{ url_for('static', filename='assets/images/wanted_poster.png') }}" alt="Wanted Poster"
                         class="wanted-poster">
 
                     <div class="avatar-preview" id="avatar-{{ user }}" style="position:absolute; bottom:0; left:0;">
                         <img class="avatar-face" id="facePreview-{{ user }}"
-                            src="{{ url_for('static', filename='images/face.png') }}" alt="Face">
+                            src="{{ url_for('static', filename='assets/images/face.png') }}" alt="Face" style="right: 0;">
                         <img class="avatar-hair" id="hairPreview-{{ user }}"
-                            src="{{ url_for('static', filename='images/hair/' + (avatar_data.hairstyle if avatar_data else 'hair_one') + '.png') }}"
+                            src="{{ url_for('static', filename='assets/images/hair/' + (avatar_data.hairstyle if avatar_data else 'hair_one') + '.png') }}"
                             alt="Hair">
                         <img class="accessory" id="hatPreview-{{ user }}"
-                            src="{{ url_for('static', filename='images/accessories/RideACowboy_Hat.webp') }}" alt="Hat"
+                            src="{{ url_for('static', filename='assets/images/accessories/RideACowboy_Hat.webp') }}" alt="Hat"
                             style="display: none;">
                         <img class="accessory" id="bandanaPreview-{{ user }}"
-                            src="{{ url_for('static', filename='images/accessories/RideACowboy_Bandana.webp') }}"
+                            src="{{ url_for('static', filename='assets/images/accessories/RideACowboy_Bandana.webp') }}"
                             alt="Bandana" style="display: none;">
                         <img class="accessory" id="glassesPreview-{{ user }}"
-                            src="{{ url_for('static', filename='images/accessories/RideACowboy_Glasses.webp') }}"
+                            src="{{ url_for('static', filename='assets/images/accessories/RideACowboy_Glasses.webp') }}"
                             alt="Glasses" style="display: none;">
                         <img class="accessory" id="pipePreview-{{ user }}"
-                            src="{{ url_for('static', filename='images/accessories/RideACowboy_Pipe.webp') }}"
+                            src="{{ url_for('static', filename='assets/images/accessories/RideACowboy_Pipe.webp') }}"
                             alt="Pipe" style="display: none;">
                     </div>
 

@@ -41,7 +41,7 @@
         function updateHairstyle() {
             const hairstyle = document.getElementById('hairstyle').value;
             const hairPreview = document.getElementById('hairPreview');
-            hairPreview.src = "{{ url_for('static', filename='images/hair/') }}" + hairstyle + ".png"; // Update hair image
+            hairPreview.src = "{{ url_for('static', filename='assets/images/hair/') }}" + hairstyle + ".png"; // Update hair image
         }
 
         function updateAccessories() {
@@ -107,12 +107,12 @@
         <br><br>
 
         <div class="avatar-preview" id="avatarPreview">
-            <img class="avatar-face" id="facePreview" src="{{ url_for('static', filename='images/face.png') }}" alt="Face">
-            <img class="avatar-hair" id="hairPreview" src="{{ url_for('static', filename='images/hair/' + (avatar_data.hairstyle if avatar_data else 'hair_one') + '.png') }}" alt="Hair">
-            <img class="accessory" src="{{ url_for('static', filename='images/accessories/RideACowboy_Hat.webp') }}" alt="Hat" style="display: none;">
-            <img class="accessory" src="{{ url_for('static', filename='images/accessories/RideACowboy_Bandana.webp') }}" alt="Bandana" style="display: none;">
-            <img class="accessory" src="{{ url_for('static', filename='images/accessories/RideACowboy_Glasses.webp') }}" alt="Glasses" style="display: none;">
-            <img class="accessory" src="{{ url_for('static', filename='images/accessories/RideACowboy_Pipe.webp') }}" alt="Pipe" style="display: none;" style="bottom: 20px; left: 60px;">
+            <img class="avatar-face" id="facePreview" src="{{ url_for('static', filename='assets/images/face.png') }}" alt="Face" style="right: 0">
+            <img class="avatar-hair" id="hairPreview" src="{{ url_for('static', filename='assets/images/hair/' + (avatar_data.hairstyle if avatar_data else 'hair_one') + '.png') }}" alt="Hair">
+            <img class="accessory" src="{{ url_for('static', filename='assets/images/accessories/RideACowboy_Hat.webp') }}" alt="Hat" style="display: none;">
+            <img class="accessory" src="{{ url_for('static', filename='assets/images/accessories/RideACowboy_Bandana.webp') }}" alt="Bandana" style="display: none;">
+            <img class="accessory" src="{{ url_for('static', filename='assets/images/accessories/RideACowboy_Glasses.webp') }}" alt="Glasses" style="display: none;">
+            <img class="accessory" src="{{ url_for('static', filename='assets/images/accessories/RideACowboy_Pipe.webp') }}" alt="Pipe" style="display: none;" style="bottom: 20px; left: 60px;">
         </div>
 
         <button type="submit">Save Avatar</button>
