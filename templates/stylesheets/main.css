@@ -1,9 +1,20 @@
+@font-face {
+    font-family: 'WW';
+    src: url('../assets/fonts/CfWildWestPersonalRegular-qVl2.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'WWSmall';
+    src: url('../assets/fonts/FleabittenDemoRegular-Yzzwj.otf') format('truetype');
+}
+
+
 /* General Styles */
 body {
-    background-image: url('background-image.jpg'); /* Replace with actual background image */
+    background-image: url('../images/wild-west.jpg'); /* Replace with actual background image */
     background-size: cover;
     background-position: center;
-    font-family: 'Cinzel', serif; /* Elegant western-style font */
+    font-family: 'WW', sans-serif;
     color: #3b2a1a; /* Dark brown for text */
     margin: 0;
     padding: 20px;
@@ -27,10 +38,30 @@ body {
 /* Header Styles */
 h1 {
     font-size: 2.8em;
-    color: #7c5e2a;  /* Dark brown */
+    color: #7c5e2a;  
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
     margin-bottom: 30px;
-    font-family: 'Playfair Display', serif; /* Western-style font */
+    font-family: 'WW', serif; 
+    display: flex;  
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+h2 {
+    font-size: 2rem;
+    color: #caaa75;  /* Dark brown */
+    margin-top: -20px;
+    padding: 1rem;
+    font-family: 'WWSmall', serif; /* Western-style font */
+    letter-spacing: 0.05em; /* Adjusts the space between letters */
+}
+
+label {
+    font-size: 1.2rem;
+    color: #caaa75;
+    font-family: 'WWSmall', serif;
+    letter-spacing: 0.05em; /* Adjusts the space between letters */
 }
 
 /* Form Elements */
@@ -41,7 +72,7 @@ input, select, textarea {
     border: 2px solid #7c5e2a;
     border-radius: 8px;
     background-color: #fff4e6;
-    font-family: 'Cinzel', serif;
+    font-family: 'WW', serif;
 }
 
 /* Button Styles */
@@ -54,8 +85,8 @@ button {
     border-radius: 10px;
     cursor: pointer;
     font-size: 1.1em;
-    font-family: 'Cinzel', serif;
-    transition: background-color 0.3s;
+    font-family: 'WW', serif;
+    transition: background-color 0.5s;
 }
 
 button:hover {
@@ -114,4 +145,35 @@ li {
 }
 
 
+.spur-like-icon {
+    width: 40px; 
+    height: auto; 
+    vertical-align: middle; 
+}
+
+.profile-header {
+    display: inline-flex;           
+    justify-content: center; 
+}
+
+.gender-icon { 
+    width: 200px;  
+    height: auto;   
+    margin-bottom: 10px;
+}
+
+.header-icon {
+    width: 70px;  
+    height: auto; 
+    margin-bottom: 15px;  
+    margin-right: 15px;
+    margin-left: 15px;
+}
+
+.header-icon-flipped {
+    transform: scaleX(-1);
+    width: 70px;  
+    height: auto; 
+    margin: 10px;  
+}
 

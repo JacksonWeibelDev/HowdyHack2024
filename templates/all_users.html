@@ -8,11 +8,15 @@
 </head>
 <body>
     <div class="container">
-        <h1>All Users</h1>
+        <h1>
+            <img src="images/Star.png" alt="Icon" class="header-icon">
+            All Users
+            <img src="images/Star.png" alt="Icon" class="header-icon">
+        </h1>
         <div class="user-list">
             {% for user, info in users.items() %}
                 <div class="user-card">
-                    <span class="username">{{ user }}{% if user in likes %} ✔️{% endif %}</span>
+                    <span class="username">{{ user }}{% if user in likes %} <img src="images/RideACowboy_Spurs.png" alt="Liked" class="spur-like-icon">{% endif %}</span>
                     <form method="POST" class="like-form">
                         <input type="hidden" name="liked_user" value="{{ user }}">
                         <button class="submit-btn" type="submit">Like</button>
