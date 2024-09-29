@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hangman Game - Connect with a Friend</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='stylesheets/main.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to Hangman!</h1>
+        <p>Start a new game by entering your username and the username of the player you'd like to challenge.</p>
+
+        <form action="/start-game" method="GET">
+            <div>
+                <label for="current_username">Your Username:</label>
+                <input type="text" id="current_username" name="current_username" required>
+            </div>
+            <div>
+                <label for="other_username">Opponent's Username:</label>
+                <input type="text" id="other_username" name="other_username" required>
+            </div>
+            <div>
+                <button type="submit">Start Game</button>
+            </div>
+        </form>
+
+        <p><strong>Instructions:</strong></p>
+        <ul>
+            <li>Enter your username and the opponent's username to start the game.</li>
+            <li>You will be redirected to the game page where you can take turns guessing letters.</li>
+        </ul>
+    </div>
+</body>
+</html>
