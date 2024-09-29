@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Start Game</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="mt-5">Start a New Game</h1>
+        <form action="{{ url_for('start_game') }}" method="post">
+            <div class="form-group">
+                <label for="username">Your Name:</label>
+                <input type="text" class="form-control" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="treasure">Your Treasure:</label>
+                <input type="text" class="form-control" name="treasure" required>
+            </div>
+            <div class="form-group">
+                <label for="game_id">Game ID:</label>
+                <input type="text" class="form-control" name="game_id" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Start Game</button>
+        </form>
+    </div>
+</body>
+</html>

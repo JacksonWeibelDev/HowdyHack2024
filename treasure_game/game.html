@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Game</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1 class="mt-5">Game for {{ username }}</h1>
+        <p>Mini Challenge: {{ challenge }}</p>
+
+        <h2>Partner's Name:</h2>
+        <p id="partner-name">
+            {% if partner_username %}
+                {{ partner_username }}
+            {% else %}
+                Waiting for another player to join...
+            {% endif %}
+        </p>
+
+        {% if game_ended %}
+            <h2>Game Ended</h2>
+            <p>Winner: {{ winner }}</p>
+            <form action="{{ url_for('end_game') }}" method="get">
+                <button type="submit" class="btn btn-danger mt-3">End Game</button>
+            </form>
+        {% else %}
+            <h2>Ask a Question:</h2>
+            <form method="post">
+                <input type="text" name="question" class="form-control" placeholder="Your question" required>
+                <button type="submit" name="action" value="ask_question" class="btn btn-success mt-2">Ask</button>
+            </form>
+
+            <h2>Answer a Question:</h2>
+            <form method="post">
+                <select name="question" class="form-control" required id="questions-dropdown">
+                    <option value="" disabled selected>Select a question</option>
+                    {% for user, question in questions %}
+                        <option value="{{ question }}">{{ user }}: {{ question }}</option>
+                    {% endfor %}
+                </select>
+                <input type="text" name="answer" class="form-control mt-2" placeholder="Your answer" required>
+                <button type="submit" name="action" value="answer_question" class="btn btn-warning mt-2">Answer</button>
+            </form>
+
+            <h2>Your Treasure Guess:</h2>
+            <form method="post">
+                <input type="text" name="guess" class="form-control" placeholder="Your guess" required>
+                <button type="submit" name="action" value="guess" class="btn btn-info mt-2">Guess</button>
+            </form>
+        {% endif %}
+
+        <h2>Questions Asked:</h2>
+        <ul class="list-group" id="questions-list">
+            {% for user, question in questions %}
+                <li class="list-group-item">
+                    <strong>{{ user }}</strong>: {{ question }}
+                    <span class="badge badge-secondary">{{ answers[question] if question in answers else 'No answer yet' }}</span>
+                </li>
+            {% endfor %}
+        </ul>
+
+        {% if not game_ended %}
+            <button id="refresh-btn" class="btn btn-primary mt-3">Refresh</button>
+        {% endif %}
+
+        <form action="{{ url_for('end_game') }}" method="get">
+            <button type="submit" class="btn btn-danger mt-3">End Game</button>
+        </form>
+    </div>
+
+    <script>
+        // Function to refresh game state
+        function refreshGameState() {
+            $.ajax({
+                url: "{{ url_for('game', game_id=game_id) }}",
+                method: "GET",
+                success: function(data) {
+                    // Update questions list
+                    $('#questions-list').empty();
+                    data.questions.forEach(function(item) {
+                        $('#questions-list').append('<li class="list-group-item"><strong>' + item[0] + '</strong>: ' + item[1] + '<span class="badge badge-secondary">' + (data.answers[item[1]] || 'No answer yet') + '</span></li>');
+                    });
+
+                    // Update mini-challenge and partner username
+                    $('#partner-name').text(data.partner_username || "Waiting for another player to join...");
+
+                    // Save currently selected question
+                    let answerSelect = $('#questions-dropdown');
+                    let selectedValue = answerSelect.val(); // Get the currently selected value
+                    answerSelect.empty(); // Clear current options
+                    data.questions.forEach(function(item) {
+                        answerSelect.append('<option value="' + item[1] + '">' + item[0] + ': ' + item[1] + '</option>');
+                    });
+                    // Re-select the previously selected value
+                    if (selectedValue) {
+                        answerSelect.val(selectedValue); // Set the dropdown to the previously selected value
+                    }
+
+                    // Check if the game has ended
+                    if (data.game_ended) {
+                        alert(data.winner + " has won the game! Congratulations!");
+                        location.reload(); // Reload the page to reflect the end of the game
+                    }
+                }
+            });
+        }
+
+        // Refresh game state every 5 seconds if the game hasn't ended
+        {% if not game_ended %}
+            setInterval(refreshGameState, 5000);
+        {% endif %}
+
+        // Manual refresh button
+        $('#refresh-btn').on('click', function() {
+            refreshGameState();
+        });
+    </script>
+</body>
+</html>
