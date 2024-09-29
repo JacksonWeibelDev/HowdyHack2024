@@ -1,7 +1,11 @@
 from flask import Flask, render_template, session, redirect, request, url_for
+import random
 
 app = Flask(__name__)
 app.secret_key = 'replace_this_with_a_secure_random_key'
+
+questions = ['Where were you born?',"What's your claim to fame?",'What is one thing you always have in your saddle bag?']
+prompts = ['Where was your pardner born?', "What's your pardner's claim to fame?", "What's one thing your pardner always has in their saddlebag?"]
 
 # Constants
 MAX_ATTEMPTS = 6
@@ -14,12 +18,14 @@ def initialize_game():
     session['attempts_left'] = MAX_ATTEMPTS
     session['game_over'] = False
     session['victory'] = False
+    session['question_index'] = random.randrange(0, 3)
 
 def masked_word():
-    """Return the word with underscores for letters not guessed correctly"""
+    """Return the word with underscores for letters not guessed correctly. Spaces remain visible."""
     word = session.get('word', '')
     correct_guesses = session.get('correct_guessed_letters', [])
-    return ''.join([letter if letter in correct_guesses else '_' for letter in word])
+    # Spaces are always revealed
+    return ''.join([letter if letter in correct_guesses or letter == ' ' else '_' for letter in word])
 
 @app.route('/')
 def index():
@@ -38,7 +44,7 @@ def set_word():
         session['game_over'] = False
         session['victory'] = False
         return redirect(url_for('play'))
-    return render_template('set_word.html')
+    return render_template('set_word.html', question=questions[session['question_index']])
 
 @app.route('/play', methods=['GET', 'POST'])
 def play():
@@ -48,7 +54,7 @@ def play():
     if request.method == 'POST' and not session['game_over']:
         guess = request.form['guess'].lower()
 
-        # Ensure single-character guesses
+        # Ensure single-character guesses and ignore spaces
         if len(guess) != 1 or not guess.isalpha():
             return redirect(url_for('play'))
 
@@ -57,15 +63,13 @@ def play():
             if guess in session['word']:
                 session['correct_guessed_letters'].append(guess)
                 session.modified = True  # Explicitly tell Flask the session has been modified
-                print(f"Correct guesses updated: {session['correct_guessed_letters']}")
             else:
                 session['incorrect_guessed_letters'].append(guess)
                 session['attempts_left'] -= 1
                 session.modified = True  # Explicitly tell Flask the session has been modified
-                print(f"Incorrect guesses updated: {session['incorrect_guessed_letters']}")
 
         # Check if the player has won or lost
-        if all([letter in session['correct_guessed_letters'] for letter in session['word']]):
+        if all([letter in session['correct_guessed_letters'] or letter == ' ' for letter in session['word']]):
             session['victory'] = True
             session['game_over'] = True
         elif session['attempts_left'] <= 0:
@@ -78,6 +82,7 @@ def play():
                            incorrect_guessed_letters=session['incorrect_guessed_letters'],
                            game_over=session['game_over'],
                            victory=session['victory'],
+                           prompt=prompts[session['question_index']],
                            word=session['word'] if session['game_over'] else None)
 
 @app.route('/reset')

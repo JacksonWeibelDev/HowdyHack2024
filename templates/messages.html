@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='stylesheets/main.css') }}">
+    <title>Messages with {{ username }}</title>
+</head>
+<body>
+    <h1>Messages with {{ username }}</h1>
+
+    <h2>Your Info</h2>
+    <p>Username: {{ current_username }}</p>
+    <p>Bio: {{ user_info.bio }}</p>
+    <p>Preferred Gender: {{ user_info.preferred_gender }}</p>
+
+    <h2>Send a Message</h2>
+    <form method="POST">
+        <textarea name="message" placeholder="Type your message here..." required></textarea>
+        <button type="submit">Send</button>
+    </form>
+
+    <h2>Messages</h2>
+    <ul>
+        {% if messages %}
+            {% for msg in messages %}
+                <li><strong>{{ msg.from }}:</strong> {{ msg.message }}</li>
+            {% endfor %}
+        {% else %}
+            <li>No messages yet.</li>
+        {% endif %}
+    </ul>
+
+    <a href="{{ url_for('my_profile') }}">Back to Profile</a>
+</body>
+</html>
