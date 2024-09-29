@@ -4,100 +4,80 @@
 }
 
 @font-face {
-    font-family: 'WWSmall';
-    src: url('../assets/fonts/FleabittenDemoRegular-Yzzwj.otf') format('truetype');
+    font-family: 'WWPixel';
+    src: url('../assets/fonts/PixelCowboy-l7we.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'WWLower';
+    src: url('../assets/fonts/PixelGame-R9AZe.otf') format('truetype');
 }
 
 
 /* General Styles */
 body {
-    background-image: url('../images/wild-west.jpg'); /* Replace with actual background image */
-    background-size: cover;
+    background-image: url('../assets/images/wild-west.jpg');
+    background-size: auto;
     background-position: center;
-    font-family: 'WW', sans-serif;
-    color: #3b2a1a; /* Dark brown for text */
-    margin: 0;
-    padding: 20px;
+
+    font-family: 'WWPixel', sans-serif;
+    color: #3b2a1a;
+
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
 }
 
-/* Containers */
-.profile-container, .game-container, .container {
-    background-color: #fff4e6;  /* Light beige for a rustic feel */
-    border-radius: 15px;
-    padding: 40px;
-    max-width: 600px;
-    text-align: center;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
-    border: 3px solid #7c5e2a;  /* Dark brown border */
-}
-
-/* Header Styles */
 h1 {
-    font-size: 2.8em;
-    color: #7c5e2a;  
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
-    margin-bottom: 30px;
-    font-family: 'WW', serif; 
-    display: flex;  
-    flex-direction: row;
+    text-transform: uppercase;
+    font-size: 3rem;
+    display: flex;
     justify-content: center;
     align-items: center;
 }
 
-h2 {
-    font-size: 2rem;
-    color: #caaa75;  /* Dark brown */
-    margin-top: -20px;
-    padding: 1rem;
-    font-family: 'WWSmall', serif; /* Western-style font */
-    letter-spacing: 0.05em; /* Adjusts the space between letters */
-}
-
-label {
-    font-size: 1.2rem;
+p {
+    font-family: 'WWLower', sans-serif;
+    font-size: 1rem;
     color: #caaa75;
-    font-family: 'WWSmall', serif;
-    letter-spacing: 0.05em; /* Adjusts the space between letters */
+    margin: 15px;
+    padding: 15px;
+    letter-spacing: 0.05em; 
 }
 
-/* Form Elements */
-input, select, textarea {
-    width: 100%;
-    padding: 10px;
-    margin: 10px 0;
-    border: 2px solid #7c5e2a;
-    border-radius: 8px;
-    background-color: #fff4e6;
-    font-family: 'WW', serif;
+.container {
+    background-color: #f6ffe6ce;
+    border: 3px solid #7c482a;
+    border-radius: 20px;
+    padding: 20px;
+    max-width: 800px;
+    width: 80%; 
+    margin: auto; 
+    text-align: center;
 }
 
-/* Button Styles */
-button {
-    background-color: #9a7b4e;  /* Golden brown */
+button, .button {
+    background-color: #9a7b4e; 
     color: white;
-    padding: 10px 20px;
-    margin: 5px;
+    padding: .5rem 1rem;
     border: none;
-    border-radius: 10px;
+    border-radius: 5px;
     cursor: pointer;
+    vertical-align: middle;
+    font-family: 'WWLower', serif;
     font-size: 1.1em;
-    font-family: 'WW', serif;
-    transition: background-color 0.5s;
+    letter-spacing: .1rem;
+    transition: background-color 0.4s;
+    margin: 5px;
 }
 
-button:hover {
-    background-color: #7c5e2a; /* Darker brown */
+button:hover, .button:hover {
+    background-color: #7c5e2a;
 }
 
-/* Link Styles */
 a {
     font-size: 1.1em;
     color: #ffffff;
-    background-color: #9a7b4e;  /* Golden brown */
     padding: 10px 15px;
     border-radius: 8px;
     text-decoration: none;
@@ -105,28 +85,9 @@ a {
 }
 
 a:hover {
-    background-color: #7c5e2a;
+    color: #fa8219;
 }
 
-/* Success and Error Messages */
-.flash-message, .flash-error {
-    padding: 10px;
-    border-radius: 8px;
-    text-align: center;
-    margin-top: 10px;
-}
-
-.flash-message {
-    background-color: #dff0d8;
-    color: #3c763d;
-}
-
-.flash-error {
-    background-color: #f2dede;
-    color: #a94442;
-}
-
-/* List Styles */
 ul {
     list-style: none;
     padding: 0;
@@ -134,46 +95,142 @@ ul {
 
 li {
     padding: 10px 0;
+    font-family: 'WWLower', sans-serif;
     font-size: 1.2em;
 }
 
-/* Profile Actions */
-.profile-actions {
+
+input[type="text"],
+input[type="password"],
+input[type="email"] {
+    width: 60%; 
+    justify-content: center;
+    align-items: center;
+    padding: 10px; 
+    margin: 10px 5px; 
+    border: 2px solid #7c482a;
+    border-radius: 5px; 
+    font-family: 'WWPixel', sans-serif; 
+    font-size: 1.2em; 
+    background-color: #f6ffe6ce; 
+    color: #3b2a1a; 
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+/* Focus State */
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="email"]:focus {
+    border-color: #9a7b4e; /* Highlight color */
+    box-shadow: 0 0 8px rgba(154, 123, 78, 0.5); /* Shadow effect on focus */
+    outline: none; /* Remove default outline */
+}
+
+input::placeholder {
+    color: #a36b4c; 
+    opacity: 0.7; 
+    font-style: italic;
+}
+
+.username {
+    color: #3b2a1a;
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.tumbleweed {
+    width: 60px; 
+    animation: rotate 3s linear infinite; 
+    margin: 20px auto; 
+    display: block; 
+}
+
+textarea {
+    width: 60%; /* Same width as input fields */
+    padding: 10px; 
+    margin: 10px 5px; 
+    border: 2px solid #7c482a;
+    border-radius: 5px; 
+    font-family: 'WWPixel', sans-serif; 
+    font-size: 1.2em; 
+    background-color: #f6ffe6ce; 
+    color: #3b2a1a; 
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+textarea:focus {
+    border-color: #9a7b4e; /* Highlight color */
+    box-shadow: 0 0 8px rgba(154, 123, 78, 0.5); /* Shadow effect on focus */
+    outline: none; /* Remove default outline */
+}
+
+select {
+    width: 60%; /* Same width as input fields */
+    padding: 10px; 
+    margin: 10px 5px; 
+    border: 2px solid #7c482a;
+    border-radius: 5px; 
+    font-family: 'WWPixel', sans-serif; 
+    font-size: 1.2em; 
+    background-color: #f6ffe6ce; 
+    color: #3b2a1a; 
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+select:focus {
+    border-color: #9a7b4e; /* Highlight color */
+    box-shadow: 0 0 8px rgba(154, 123, 78, 0.5); /* Shadow effect on focus */
+    outline: none; /* Remove default outline */
+}
+
+.win {
+    font-size: 2rem;
+}
+
+.radio-group {
     display: flex;
-    flex-direction: column;
-    gap: 15px;
+    flex-direction: column; /* Stack the radio buttons vertically */
+    gap: 10px; /* Space between radio buttons */
 }
 
-
-.spur-like-icon {
-    width: 40px; 
-    height: auto; 
-    vertical-align: middle; 
+input[type="radio"] {
+    appearance: none; /* Remove default styling */
+    width: 10px; /* Custom radio button size */
+    height: 10px; /* Custom radio button size */
+    border: 2px solid #7c482a; /* Border color */
+    border-radius: 50%; /* Make it round */
+    outline: none; /* Remove outline */
+    cursor: pointer; /* Change cursor on hover */
+    transition: background-color 0.3s, border-color 0.3s;
 }
 
-.profile-header {
-    display: inline-flex;           
-    justify-content: center; 
+input[type="radio"]:hover {
+    border-color: #9a7b4e; /* Change border color on hover */
 }
 
-.gender-icon { 
-    width: 200px;  
-    height: auto;   
-    margin-bottom: 10px;
+input[type="radio"]:checked {
+    background-color: #9a7b4e; /* Change to desired color when checked */
+    border-color: #3b2a1a; /* Change border color when checked */
 }
 
 .header-icon {
     width: 70px;  
-    height: auto; 
-    margin-bottom: 15px;  
-    margin-right: 15px;
-    margin-left: 15px;
+    vertical-align: bottom;
 }
 
 .header-icon-flipped {
     transform: scaleX(-1);
     width: 70px;  
-    height: auto; 
-    margin: 10px;  
+    vertical-align: bottom;
 }
 

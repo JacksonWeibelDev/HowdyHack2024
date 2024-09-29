@@ -3,44 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='stylesheets/main.css') }}">
+    <link rel="stylesheet" href="../static/stylesheets/main.css">
+    
     <title>Messages with {{ username }}</title>
 </head>
 <body>
-    <h1>Messages with {{ username }}</h1>
+    <div class="container">
+        <h1>
+            <img src="../images/Heart.png" alt="icon" class="header-icon">
+            Messages with {{ username }}
+            <img src="../images/Heart.png" alt="icon" class="header-icon-flipped">
+        </h1>
 
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
-            <ul class="flashes">
+            <ul>
             {% for category, message in messages %}
-                <li class="{{ category }}">{{ message }}</li>
+                <li>{{ message }}</li>
             {% endfor %}
             </ul>
         {% endif %}
     {% endwith %}
 
-    <div class="messages">
+    <div>
         {% for msg in messages %}
-
-                {% if msg.get('game') == 'hangman' %}
-                    {% if msg['from'] == current_username %}
-                        <p><strong>You</strong> have sent a Hangman game!</p>  <!-- Change for the sender -->
-                    {% else %}
-                        <p><strong>{{ msg['from'] }}</strong> has sent you a Hangman game!</p>
-                        <a href="{{ url_for('play_hangman', username=username)}}">Click here to play Hangman</a>
-                    {% endif %}
-                {% endif %}
-                {% if msg.get('game') == 'two_truths_and_a_lie' %}
-                    {% if msg['from'] != current_username %}
-                        <p><a href="{{ url_for('play_two_truths_and_a_lie', username=username) }}">You received a "Two Truths and a Lie" game! Click to play.</a></p>
-                    {% else %}
-                        <p>You sent a "Two Truths and a Lie" game.</p>
-                    {% endif %}
+            {% if msg.get('game') == 'hangman' %}
+                {% if msg['from'] == current_username %}
+                    <p><strong>You</strong> have sent a Hangman game!</p>  <!-- Change for the sender -->
                 {% else %}
-                    <p><strong>{{ msg['from'] }}</strong>: {{ msg['message'] }}</p>
+                    <p><strong>{{ msg['from'] }}</strong> has sent you a Hangman game!</p>
+                    <a href="{{ url_for('play_hangman', username=username) }}">Click here to play Hangman</a>
                 {% endif %}
-
-        {% endfor%}
+            {% endif %}
+            {% if msg.get('game') == 'two_truths_and_a_lie' %}
+                {% if msg['from'] != current_username %}
+                    <p><a href="{{ url_for('play_two_truths_and_a_lie', username=username) }}">You received a "Two Truths and a Lie" game! Click to play.</a></p>
+                {% else %}
+                    <p>You sent a "Two Truths and a Lie" game.</p>
+                {% endif %}
+            {% else %}
+                <p><strong>{{ msg['from'] }}</strong>: {{ msg['message'] }}</p>
+            {% endif %}
+        {% endfor %}
     </div>
 
     <form method="POST">
@@ -48,13 +52,15 @@
         <button type="submit">Send</button>
     </form>
 
-    <a href="{{ url_for('hangman', username=username) }}">Send Hangman Game</a>
-    <a href="{{ url_for('two_truths_and_a_lie', username=username) }}">Send Two Truths and a Lie Game</a>
+    
+    <button><a href="{{ url_for('hangman', username=username) }}">Send Hangman Game</a></button>
+    <button><a href="{{ url_for('two_truths_and_a_lie', username=username) }}">Send Showdown</a></button>
 
     <form action="{{ url_for('clear_messages', username=username) }}" method="POST">
-    <button type="submit" class="btn btn-danger">Clear Messages</button>
+        <button type="submit">Clear Messages</button>
     </form>
 
-<a href="{{ url_for('my_profile') }}">Back to Profile</a>
+    <a href="{{ url_for('my_profile') }}">Back to Profile</a>
+    </div>
 </body>
 </html>

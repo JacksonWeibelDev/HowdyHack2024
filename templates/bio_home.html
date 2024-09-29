@@ -1,22 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='stylesheets/main.css') }}">
-
+    <link rel="stylesheet" href="../static/stylesheets/main.css">
     <title>Home</title>
 </head>
+
 <body>
-    <h1>Save a Horse!!!</h1>
+    <div class="container">
+        <h1>
+            <img src="../images/Heart.png" alt="icon" class="header-icon">
+            RIDER
+            <img src="../images/Heart.png" alt="icon" class="header-icon-flipped">
+        </h1>
+        <p>Save a Horse, Ride a Cowboy!</p>
 
-    <form action="{{ url_for('login') }}">
-        <button type="submit">Log In</button>
-    </form>
-    <br>
-    <form action="{{ url_for('create_bio') }}">
-        <button type="submit">Sign Up</button>
-    </form>
-
+        <form action="{{ url_for('login') }}">
+            <button type="submit">Log In</button>
+        </form>
+        <br>
+        <form action="{{ url_for('create_bio') }}">
+            <button type="submit">Sign Up</button>
+        </form>
+    </div>
 </body>
+
 </html>

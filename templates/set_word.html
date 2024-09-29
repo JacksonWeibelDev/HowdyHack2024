@@ -3,15 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/stylesheets/main.css">
+    
     <title>Set Word</title>
 </head>
 <body>
-    <h1>Player 1: Set the word for Hangman</h1>
-    <p>Prompt: {{ question }}</p>
+    <div class="container">
+    <h1>
+        <img src="../images/RideACowboy_Gun.png" alt="icon" class="header-icon-flipped">
+        Player 1:
+        <img src="../images/RideACowboy_Gun.png" alt="icon" class="header-icon">
+    </h1>
+    <h1> Set the word for Hangman</h1>
+    <h2>Prompt: {{ question }}</h2>
     <form method="POST">
         <label for="word">Enter a word:</label>
+        <br>
         <input type="text" id="word" name="word" required>
+        <br>
         <button type="submit">Start Game</button>
     </form>
+    </div>
 </body>
 </html>

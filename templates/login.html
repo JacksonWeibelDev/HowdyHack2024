@@ -1,31 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='stylesheets/main.css') }}">
+    <link rel="stylesheet" href="../static/stylesheets/main.css">
     <title>Login</title>
 </head>
+
 <body>
-    <h1>Login</h1>
-    <form method="POST">
-        <label for="username">Username:</label><br>
-        <input type="text" id="username" name="username" required><br><br>
-        <label for="password">Password:</label><br>
-        <input type="password" id="password" name="password" required><br><br>
-        <button type="submit">Login</button>
-    </form>
+    <div class="container">
+        <h1>
+            <img src="../images/Heart.png" alt="icon" class="header-icon">
+            Login
+            <img src="../images/Heart.png" alt="icon" class="header-icon-flipped">
+        </h1>
+        <form method="POST">
+            <label for="username">Username:</label><br>
+            <input type="text" id="username" name="username" required><br><br>
 
-    {% with messages = get_flashed_messages(with_categories=true) %}
+            <label for="password">Password:</label><br>
+            <input type="password" id="password" name="password" required><br><br>
+
+            <button type="login">Login</button>
+        </form>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
-            <ul>
+        <ul>
             {% for category, message in messages %}
-                <li class="{{ category }}">{{ message }}</li>
+            <li class="{{ category }}">{{ message }}</li>
             {% endfor %}
-            </ul>
+        </ul>
         {% endif %}
-    {% endwith %}
+        {% endwith %}
 
-    <p>Don't have an account? <a href="{{ url_for('create_bio') }}">Create one here!</a></p>
+        <p>Don't have an account? 
+            <div>
+                <a href="{{ url_for('create_bio') }}">
+                    Create one here!
+                </a>
+            </div>
+        </p>
+    </div>
 </body>
+
 </html>

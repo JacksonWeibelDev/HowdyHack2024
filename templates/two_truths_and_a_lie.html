@@ -3,21 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='stylesheets/main.css') }}">
+    <link rel="stylesheet" href="../static/stylesheets/main.css">
     <title>{{ username }}'s Profile</title>
 </head>
-
-<form method="POST">
-    <label for="truth_1">First Truth:</label>
-    <input type="text" name="truth_1" id="truth_1" required>
-
-    <label for="truth_2">Second Truth:</label>
-    <input type="text" name="truth_2" id="truth_2" required>
-
-    <label for="lie">The Lie:</label>
-    <input type="text" name="lie" id="lie" required>
-
-    <button type="submit">Send Game</button>
-
-</form>
-<a href="{{ url_for('my_profile') }}">Back to messages</a>
+<body>
+    <div class="container">
+        <h1>
+        <img src="../images/RideACowboy_Gun.png" alt="icon" class="header-icon-flipped">
+            Showdown
+            <img src="../images/RideACowboy_Gun.png" alt="icon" class="header-icon">
+        </h1>
+    <form method="POST">
+        <label for="truth_1">First Truth:</label>
+        <br>
+        <input type="text" name="truth_1" id="truth_1" required>
+        <br>
+        <label for="truth_2">Second Truth:</label>
+        <br>
+        <input type="text" name="truth_2" id="truth_2" required>
+        <br>
+        <label for="lie">The Lie:</label>
+        <br>
+        <input type="text" name="lie" id="lie" required>
+        <br>
+        <button type="submit">Send Game</button>
+    </form>
+    <br>
+    <button><a href="{{ url_for('my_profile') }}">Back to messages</a></button>
+</div>
+</body>
+</html>

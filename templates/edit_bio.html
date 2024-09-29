@@ -1,38 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='stylesheets/main.css') }}">
+    <link rel="stylesheet" href="../static/stylesheets/main.css">
     <title>Edit Bio</title>
 </head>
+
 <body>
-    <h1>Edit Bio</h1>
-    <form method="POST">
-        <label for="bio">Bio:</label><br>
-        <textarea id="bio" name="bio" required>{{ user_info.bio }}</textarea><br><br>
-        <label for="gender">Gender:</label><br>
-        <select id="gender" name="gender" required>
-            <option value="Male" {% if user_info.gender == 'Male' %}selected{% endif %}>Male</option>
-            <option value="Female" {% if user_info.gender == 'Female' %}selected{% endif %}>Female</option>
-            <option value="Other" {% if user_info.gender == 'Other' %}selected{% endif %}>Other</option>
-        </select><br><br>
-        <label for="preferred_gender">Preferred Gender:</label><br>
-        <select id="preferred_gender" name="preferred_gender" required>
-            <option value="Male" {% if user_info.preferred_gender == 'Male' %}selected{% endif %}>Male</option>
-            <option value="Female" {% if user_info.preferred_gender == 'Female' %}selected{% endif %}>Female</option>
-            <option value="Other" {% if user_info.preferred_gender == 'Other' %}selected{% endif %}>Other</option>
-        </select><br><br>
-        <button type="submit">Update Bio</button>
-    </form>
-    {% with messages = get_flashed_messages(with_categories=true) %}
+    <div class="container">
+        <h1>
+            <img src="../images/Star.png" alt="icon" class="header-icon">
+            Edit Bio
+            <img src="../images/Star.png" alt="icon" class="header-icon-flipped">
+        </h1>
+        <form method="POST">
+            <label for="bio">Bio:</label><br>
+            <textarea id="bio" name="bio" required placeholder="Enter your bio here...">{{ user_info.bio }}</textarea>
+            <br><br>
+
+            <label for="gender">Gender:</label><br>
+            <select id="gender" name="gender" required>
+                <option value="Male" {% if user_info.gender=='Male' %}selected{% endif %}>Male</option>
+                <option value="Female" {% if user_info.gender=='Female' %}selected{% endif %}>Female</option>
+                <option value="Other" {% if user_info.gender=='Other' %}selected{% endif %}>Other</option>
+            </select><br><br>
+
+            <label for="preferred_gender">Preferred Gender:</label><br>
+            <select id="preferred_gender" name="preferred_gender" required>
+                <option value="Male" {% if user_info.preferred_gender=='Male' %}selected{% endif %}>Male</option>
+                <option value="Female" {% if user_info.preferred_gender=='Female' %}selected{% endif %}>Female</option>
+                <option value="Other" {% if user_info.preferred_gender=='Other' %}selected{% endif %}>Other</option>
+            </select><br><br>
+
+            <button type="submit">Update Bio</button>
+        </form>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
-            <ul>
+        <ul>
             {% for category, message in messages %}
-                <li class="{{ category }}">{{ message }}</li>
+            <li class="{{ category }}">{{ message }}</li>
             {% endfor %}
-            </ul>
+        </ul>
         {% endif %}
-    {% endwith %}
+        {% endwith %}
+    </div>
 </body>
+
 </html>

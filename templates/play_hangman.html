@@ -3,11 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='stylesheets/main.css') }}">
+    <link rel="stylesheet" href="../static/stylesheets/main.css">
     <title>Play Hangman</title>
 </head>
 <body>
-    <h1>Play Hangman with {{ username }}</h1>
+    <div class="container">
+    <h1>Play Hangman with</h1>
+    <h1>
+        <img src="../images/RideACowboy_Gun.png" alt="icon" class="header-icon-flipped">
+        {{ username }}
+        <img src="../images/RideACowboy_Gun.png" alt="icon" class="header-icon">
+
+    </h1>
 
     {% if game_won %}
         <h2>Congratulations! You've won!</h2>
@@ -16,13 +23,16 @@
         <h2>Word: {{ word_display }}</h2>
         <form method="POST">
             <label for="guess">Guess a letter:</label>
+            <br>
             <input type="text" name="guess" maxlength="1" required>
+            <br>
             <button type="submit">Submit Guess</button>
         </form>
 
         <h3>Previous Guesses: {{ guessed_letters }}</h3>
     {% endif %}
 
-    <a href="{{ url_for('messages', username=username) }}">Back to Messages</a>
+    <button><a href="{{ url_for('messages', username=username) }}">Back to Messages</a></button>
+    </div>
 </body>
 </html>

@@ -3,11 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='stylesheets/main.css') }}">
+    <link rel="stylesheet" href="../static/stylesheets/main.css">
+    
     <title>Choose Word for Hangman</title>
 </head>
 <body>
-    <h1>Choose a Word for Hangman</h1>
+    <div class="container">
+        <h1>
+            <img src="../images/RideACowboy_Gun.png" alt="icon" class="header-icon-flipped">
+            Choose a Word for Hangman
+            <img src="../images/RideACowboy_Gun.png" alt="icon" class="header-icon">
+        </h1>
 
     <p><strong>Question:</strong> {{ question }}</p>
 
@@ -19,5 +25,6 @@
     </form>
 
     <a href="{{ url_for('messages', username=username) }}">Back to Messages</a>
+    </div>
 </body>
 </html>

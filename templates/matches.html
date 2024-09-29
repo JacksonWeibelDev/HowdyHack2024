@@ -1,29 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='stylesheets/main.css') }}">
+    <link rel="stylesheet" href="../static/stylesheets/main.css">
     <title>Your Matches</title>
 </head>
+
 <body>
     <div class="container">
-        <h1>Your Matches</h1>
-
+        <h1>
+            <img src="../images/Heart.png" alt="icon" class="header-icon">
+            My Matches
+            <img src="../images/Heart.png" alt="icon" class="header-icon-flipped">
+        </h1>
         <ul>
             {% if matches %}
-                {% for match in matches %}
-                    <li>
-                        <a href="{{ url_for('view_profile', username=match) }}">{{ match }}</a>
-                        - <a href="{{ url_for('messages', username=match) }}">Message</a>
-                    </li>
-                {% endfor %}
+            {% for match in matches %}
+            <li>
+                <a href="{{ url_for('view_profile', username=match) }}" class="username">{{ match }}</a>
+                - <button><a href="{{ url_for('messages', username=match) }}">Message</a></button>
+            </li>
+            {% endfor %}
             {% else %}
-                <li>No matches found.</li>
-            {% endif %}
+            <li>No matches found.</li>
+            <img src="../static/assets/images/RideACowboy_tumbleweed.png" alt="Tumbleweed" class="tumbleweed">
+        {% endif %}
         </ul>
 
-        <a href="{{ url_for('my_profile') }}">Back to Profile</a>
+        <button><a href="{{ url_for('my_profile') }}">Back to Profile</a></button>
     </div>
+
 </body>
+
 </html>

@@ -3,10 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/stylesheets/main.css">
+    
     <title>Hangman Game</title>
 </head>
 <body>
-    <h1>Hangman</h1>
+    <div class="container">
+    <h1>
+        <img src="../images/RideACowboy_Gun.png" alt="icon" class="header-icon-flipped">
+        Hangman
+        <img src="../images/RideACowboy_Gun.png" alt="icon" class="header-icon">
+
+    </h1>
     <p>Prompt: {{ prompt }}</p>
     <p>Word to guess: {{ masked_word }}</p>
     <p>Attempts left: {{ attempts_left }}</p>
@@ -28,5 +36,6 @@
         {% endif %}
         <a href="{{ url_for('reset') }}">Play Again</a>
     {% endif %}
+    </div>
 </body>
 </html>
