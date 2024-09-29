@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 import json
 import os
+import random
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Needed for session management
@@ -213,17 +214,147 @@ def messages(username):
         all_messages[key] = []
 
     if request.method == 'POST':
-        # Get the message from the form
-        message = request.form.get('message')
-        # Store the message in the conversation
-        if message:
-            all_messages[key].append({"from": current_username, "message": message})
-            save_messages(all_messages)
+        # Check if sending a Hangman game
+        if 'hangman' in request.form:
+            return redirect(url_for('hangman', username=username))  # This is correct
+        else:
+            # Get the message from the form
+            message = request.form.get('message')
+            # Store the message in the conversation
+            if message:
+                all_messages[key].append({"from": current_username, "message": message})
+                save_messages(all_messages)
 
     # Retrieve messages for display
     messages_list = all_messages.get(key, [])
 
     return render_template('messages.html', username=username, user_info=user_info, messages=messages_list, current_username=current_username)
+
+get_to_know_you_questions = {
+    "What's your favorite animal?": "elephant",
+    "What's your favorite color?": "blue",
+    "What's your favorite movie?": "inception",
+    "What's your favorite food?": "pizza",
+    "What's your favorite hobby?": "reading",
+}
+
+
+@app.route('/hangman/<username>', methods=['GET', 'POST'])
+def hangman(username):
+    current_username = session.get('username')
+
+    # Load existing messages
+    all_messages = load_messages()
+
+    # Sort the usernames to create a consistent key
+    user_pair = sorted([current_username, username])
+    key = f"{user_pair[0]}_{user_pair[1]}"
+
+    if request.method == 'POST':
+        # User submits their answer for the random question
+        answer = request.form.get('answer')
+        if answer:
+            # Clean up the input: strip whitespace and convert to lowercase
+            cleaned_answer = answer.strip().lower()
+
+            # Clear previous hangman game messages
+            all_messages[key] = [msg for msg in all_messages[key] if msg.get('game') != 'hangman']
+
+            # Store the chosen answer in the messages list
+            all_messages[key].append({
+                "from": current_username,
+                "game": "hangman",
+                "word": cleaned_answer,  # Use cleaned answer
+                "guessed_letters": [],  # Initialize guessed_letters as an empty list
+                "game_status": "ongoing"  # Initialize game status
+            })
+            save_messages(all_messages)
+
+            # Redirect back to messages page with a confirmation message
+            flash('Hangman game has been sent!', 'success')  # Use flash to show a success message
+            return redirect(url_for('messages', username=username))
+
+    # Get a random question from the list
+    random_question = random.choice(list(get_to_know_you_questions.keys()))
+
+    return render_template('hangman.html', question=random_question, current_username=current_username)
+
+
+@app.route('/play_hangman/<username>', methods=['GET', 'POST'])
+def play_hangman(username):
+    current_username = session.get('username')
+
+    # Check if the current user is the recipient of the Hangman game
+    if current_username == username:
+        return "You are not authorized to play this Hangman game.", 403  # Forbidden
+
+    # Load existing messages
+    all_messages = load_messages()
+
+    # Sort the usernames to create a consistent key
+    user_pair = sorted([current_username, username])
+    key = f"{user_pair[0]}_{user_pair[1]}"
+
+    # Initialize the last_message variable
+    # Retrieve the last message related to the Hangman game
+    last_message = next((msg for msg in all_messages[key] if msg.get('game') == 'hangman'), None)
+
+    if not last_message:
+        return "No Hangman game found."
+
+    # Check if the game is already finished
+    if last_message.get('game_status') == 'finished':
+        return render_template('hangman_finished.html', username=username)
+
+    # Ensure the key exists in the all_messages dictionary
+    if key in all_messages:
+        last_message = next((msg for msg in all_messages[key] if msg.get('game') == 'hangman'), None)
+
+    # Initialize variables safely
+    word = last_message['word'] if last_message else ''
+    guessed_letters = last_message.get('guessed_letters', []) if last_message else []
+
+    # Initialize a variable to determine if the game has been won
+    game_won = False
+
+    if request.method == 'POST':
+        guess = request.form.get('guess', '').lower()
+        if guess and len(guess) == 1 and guess not in guessed_letters:
+            guessed_letters.append(guess)
+            # Save the updated guessed letters back to the messages
+            if last_message:
+                last_message['guessed_letters'] = guessed_letters
+            else:
+                all_messages[key].append({
+                    "from": current_username,
+                    "game": "hangman",
+                    "word": word,
+                    "guessed_letters": guessed_letters
+                })
+            save_messages(all_messages)
+
+    word_display = ''.join([letter if letter in guessed_letters else '_' for letter in word])
+
+    # Check if the game has been won
+    if all(letter in guessed_letters for letter in word):
+        game_won = True
+
+        # Handle winning logic
+        if game_won:  # This should be your game win condition
+            # Send a completion message to both users
+            completion_message = f"{current_username} has won the Hangman game!"
+            all_messages[key].append({"from": "Game", "message": completion_message})
+
+            # Set the game status to finished and remove the link message
+            last_message['game_status'] = 'finished'
+            save_messages(all_messages)
+
+            # Redirect to the hangman_finished.html page
+            return render_template('hangman_finished.html', username=username)
+
+    return render_template('play_hangman.html', username=username, word_display=word_display, guessed_letters=', '.join(guessed_letters), game_won=game_won)
+
+
 
 
 if __name__ == '__main__':

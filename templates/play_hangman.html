@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='stylesheets/main.css') }}">
+    <title>Play Hangman</title>
+</head>
+<body>
+    <h1>Play Hangman with {{ username }}</h1>
+
+    {% if game_won %}
+        <h2>Congratulations! You've won!</h2>
+        <h3>The word was: {{ word_display }}</h3>
+    {% else %}
+        <h2>Word: {{ word_display }}</h2>
+        <form method="POST">
+            <label for="guess">Guess a letter:</label>
+            <input type="text" name="guess" maxlength="1" required>
+            <button type="submit">Submit Guess</button>
+        </form>
+
+        <h3>Previous Guesses: {{ guessed_letters }}</h3>
+    {% endif %}
+
+    <a href="{{ url_for('messages', username=username) }}">Back to Messages</a>
+</body>
+</html>
