@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Customize Avatar</title>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='stylesheets/main.css') }}">
+    <link rel="stylesheet" href="../static/stylesheets/main.css">
     <style>
         .avatar-preview {
             position: relative;
@@ -67,9 +67,15 @@
     </script>
 </head>
 <body onload="initializeInputs()">
-    <h1>Customize Your Avatar</h1>
+    <div class="container">
+    <h1>
+        <img src="../static/assets/images/Star.png" alt="icon" class="header-icon">
+        Customize Your Avatar
+        <img src="../static/assets/images/Star.png" alt="icon" class="header-icon-flipped">
+    </h1>
     <form method="POST">
         <label for="hairstyle">Hairstyle:</label>
+        <br>
         <select id="hairstyle" name="hairstyle" onchange="updateHairstyle()">
             {% for style in hairstyles %}
                 <option value="{{ style }}" {% if avatar_data and avatar_data.hairstyle == style %}selected{% endif %}>{{ style.capitalize() }}</option>
@@ -77,6 +83,7 @@
         </select>
         <br><br>
 
+        <div class="item_selection">
         <label>
             <input type="checkbox" name="hat" onchange="updateAccessories()" {% if avatar_data and avatar_data.hat %}checked{% endif %}>
             Hat
@@ -96,6 +103,7 @@
             <input type="checkbox" name="pipe" onchange="updateAccessories()" {% if avatar_data and avatar_data.pipe %}checked{% endif %}>
             Pipe
         </label>
+        </div>
         <br><br>
 
         <div class="avatar-preview" id="avatarPreview">
@@ -109,5 +117,6 @@
 
         <button type="submit">Save Avatar</button>
     </form>
+</div>
 </body>
 </html>
